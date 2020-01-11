@@ -19,7 +19,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private RecyclerView mDessertsRV;
-    private List<Dessert> mDesserts;
     private DessertsAdapter mDessertsAdapter;
 
     @Override
@@ -32,8 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void init(){
         mDessertsRV = findViewById(R.id.dessertsRV);
-        mDessertsAdapter = new DessertsAdapter();
-        mDesserts = DessertFactory.getInstance().getDesserts();
+        mDessertsAdapter = new DessertsAdapter(
+                this,
+                DessertFactory.getInstance().getDesserts()
+        );
     }
 
     private void setupDesserts(){
@@ -41,47 +42,5 @@ public class MainActivity extends AppCompatActivity {
         mDessertsRV.setLayoutManager(
                 new LinearLayoutManager(this)
         );
-    }
-
-    class DessertsAdapter extends RecyclerView.Adapter<DessertVH>{
-
-        @NonNull
-        @Override
-        public DessertVH onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(MainActivity.this).inflate(
-                    R.layout.item_dessert,
-                    parent,
-                    false
-            );
-            return new DessertVH(view);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull DessertVH holder, int position) {
-            holder.bindDessert(
-                    mDesserts.get(position)
-            );
-        }
-
-        @Override
-        public int getItemCount() {
-            return mDesserts.size();
-        }
-    }
-
-    class DessertVH extends RecyclerView.ViewHolder{
-
-        private TextView mDessertNameTV, mDessertCaloriesTV;
-
-        public DessertVH(@NonNull View itemView) {
-            super(itemView);
-            mDessertNameTV = itemView.findViewById(R.id.dessertNameTV);
-            mDessertCaloriesTV = itemView.findViewById(R.id.dessertCaloriesTV);
-        }
-
-        public void bindDessert(Dessert dessert){
-            mDessertNameTV.setText(dessert.getName());
-            mDessertCaloriesTV.setText(String.valueOf(dessert.getCalories()));
-        }
     }
 }
